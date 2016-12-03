@@ -235,7 +235,13 @@ void setup() {
   //if it does not connect it starts an access point with the specified name
   //here  "AutoConnectAP"
   //and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect("SwitchAP", "password")) {
+  String mac = WiFi.macAddress();
+  String apName = "Switch-" + mac.substring(9,11) + mac.substring(12,14) + mac.substring(15,17);
+  Serial.print("APName: ");
+  Serial.println(apName);  
+  char chrAppName[13];
+  strcpy(chrAppName, apName.c_str());
+  if (!wifiManager.autoConnect(chrAppName)) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
