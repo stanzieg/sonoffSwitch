@@ -1,3 +1,4 @@
+//  Version 1_0_1    Use bottom end of MAC address as AP Identifier
 //  Version 1_0_0    Initial Release
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
@@ -236,7 +237,14 @@ void setup() {
   //if it does not connect it starts an access point with the specified name
   //here  "AutoConnectAP"
   //and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect("SwitchAP")) {
+  //  Set up AP Name with end of mac address                       Version 1_0_1
+  String mac = WiFi.macAddress();
+  String apName = "Switch-" + mac.substring(9,11) + mac.substring(12,14) + mac.substring(15,17);
+  Serial.print("APName: ");
+  Serial.println(apName);  
+  char chrAppName[13];
+  strcpy(chrAppName, apName.c_str());
+  if (!wifiManager.autoConnect(chrAppName)) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
