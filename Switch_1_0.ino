@@ -1,3 +1,4 @@
+//  Version 1_0_2    Added clientID for login (prevents runaway subscriptions
 //  Version 1_0_1    Use bottom end of MAC address as AP Identifier
 //  Version 1_0_0    Initial Release
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
@@ -118,8 +119,11 @@ void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
+    //  IMPORTANT - Set up unique clientID        Version 1_0_2  
+    String clientId = "ESP8266Client-";
+    clientId += String(random(0xffff), HEX);
     // Attempt to connect
-    if (client.connect("ESP8266Client")) {
+    if (client.connect(clientId.c_str())) {
       // Once connected, publish an announcement...
       Serial.println("connected");
       //   {"deviceid":"switch_basement1","deviceip":"192.168.1.25","devicetype":"switch","mqttpath":"switch/basement1","devicename":"Basement Utility Room Light","status":"0"}
